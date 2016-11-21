@@ -479,7 +479,7 @@ case "$archive" in
 esac
 if [[ ! -f "$archive" ]]; then
   build_progress "$archive" 'Downloading'
-  (wget -nv -t 5 "$download_url" > >(build_log) 2>&1) || (wget -nv -t 5 "$download_url" > >(build_log) 2>&1) || exit "unable to download $download_url"
+  (wget --no-check-certificate -nv -t 5 "$download_url" > >(build_log) 2>&1) || (wget --no-check-certificate -nv -t 5 "$download_url" > >(build_log) 2>&1) || exit "unable to download $download_url"
   if [[ -f "$archive" ]]; then
     build_progress 'done'
   else
@@ -495,7 +495,7 @@ if [[ ! -d "$package_name" ]]; then
   else
     rm -rf "$archive" "$package_name"
     build_progress "$archive" 'Downloading'
-    wget -nv "$download_url" > >(build_log) 2>&1
+    wget --no-check-certificate -nv "$download_url" > >(build_log) 2>&1
     build_progress 'done'
     build_progress "$archive" 'Extracting'
     "$archive_type" -d <"$archive" | pax -r
@@ -857,7 +857,7 @@ mkdir -p 'pkgs' 'source' 'build'
 cd 'pkgs' || print_error
 rm -fr 'config.guess'
 build_progress 'config.guess' 'Downloading'
-wget -nv -O config.guess 'http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD' > >(build_log) 2>&1 || { ping -c 1 git.savannah.gnu.org >/dev/null 2>&1 || printf '\nsavannah.gnu.org seems to be offline right now and is needed to download the file "config.guess", please try again later.\n\n'; rm -f 'config.guess' && exit 1; }
+wget --no-check-certificate -nv -O config.guess 'http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD' > >(build_log) 2>&1 || { ping -c 1 git.savannah.gnu.org >/dev/null 2>&1 || printf '\nsavannah.gnu.org seems to be offline right now and is needed to download the file "config.guess", please try again later.\n\n'; rm -f 'config.guess' && exit 1; }
 build_progress 'done'
 system_type="$(sh config.guess)"
 
@@ -874,7 +874,7 @@ else
   if [[ ! -d "mingw-w64-$mingw_w64_release_ver" || ! -f "mingw-w64-$mingw_w64_release_ver.tar.bz2" ]]; then
     rm -f "mingw-w64-$mingw_w64_release_ver.tar.bz2" "mingw-w64-$mingw_w64_release_ver"
     build_progress "mingw-w64-$mingw_w64_release_ver.tar.bz2" 'Downloading'
-    wget -nv -O "mingw-w64-$mingw_w64_release_ver.tar.bz2" http://downloads.sourceforge.net/project/mingw-w64/mingw-w64/mingw-w64-release/mingw-w64-v${mingw_w64_release_ver}.tar.bz2 > >(build_log) 2>&1 || print_error
+    wget --no-check-certificate -nv -O "mingw-w64-$mingw_w64_release_ver.tar.bz2" http://downloads.sourceforge.net/project/mingw-w64/mingw-w64/mingw-w64-release/mingw-w64-v${mingw_w64_release_ver}.tar.bz2 > >(build_log) 2>&1 || print_error
     build_progress 'done'
     build_progress "mingw-w64-$mingw_w64_release_ver.tar.bz2" 'Extracting'
     bzip2 -d <"mingw-w64-$mingw_w64_release_ver.tar.bz2" | pax -r
